@@ -9,8 +9,8 @@ import {
 import { Accounts } from "./Accounts";
 import { Tokens } from "./Tokens";
 
-@Index("index_account_id", ["accountId"], {})
 @Index("index_account_id_token_id", ["accountId", "tokenId"], {})
+@Index("index_account_id", ["accountId"], {})
 @Index("account_has_token_pkey", ["id"], { unique: true })
 @Index("index_token_id", ["tokenId"], {})
 @Entity("account_has_tokens", { schema: "public" })

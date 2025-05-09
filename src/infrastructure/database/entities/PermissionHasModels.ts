@@ -1,10 +1,10 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
 import { Permissions } from "./Permissions";
 
-@Index("permission_has_models_pkey", ["modelId", "permissionId"], {
+@Index("index_permission_has_models", ["modelId", "permissionId"], {
   unique: true,
 })
-@Index("index_permission_has_models", ["modelId", "permissionId"], {
+@Index("permission_has_models_pkey", ["modelId", "permissionId"], {
   unique: true,
 })
 @Entity("permission_has_models", { schema: "public" })

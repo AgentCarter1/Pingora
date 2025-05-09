@@ -1,6 +1,6 @@
-import { Column, Entity, Index, OneToMany } from "typeorm";
-import { AccessKeys } from "./AccessKeys";
+import { Column, Entity, Index, OneToMany, OneToOne } from "typeorm";
 import { AccountHasAddresses } from "./AccountHasAddresses";
+import { AccountHasEmails } from "./AccountHasEmails";
 import { AccountHasOwnerZones } from "./AccountHasOwnerZones";
 import { AccountHasPermissions } from "./AccountHasPermissions";
 import { AccountHasPhones } from "./AccountHasPhones";
@@ -9,9 +9,8 @@ import { AccountHasTokens } from "./AccountHasTokens";
 import { AccountHasZones } from "./AccountHasZones";
 import { AccountInvites } from "./AccountInvites";
 import { AccountParameters } from "./AccountParameters";
+import { MonitorNotificationHasAccounts } from "./MonitorNotificationHasAccounts";
 
-@Index("email_unique", ["email"], { unique: true })
-@Index("index_accounts_email", ["email"], { unique: true })
 @Index("accounts_pkey", ["id"], { unique: true })
 @Entity("accounts", { schema: "public" })
 export class Accounts {
@@ -21,9 +20,6 @@ export class Accounts {
     default: () => "gen_random_uuid()",
   })
   id: string;
-
-  @Column("character varying", { name: "email", unique: true })
-  email: string;
 
   @Column("jsonb", { name: "phone", nullable: true })
   phone: object | null;
@@ -85,14 +81,17 @@ export class Accounts {
   @Column("timestamp without time zone", { name: "deleted_at", nullable: true })
   deletedAt: Date | null;
 
-  @OneToMany(() => AccessKeys, (accessKeys) => accessKeys.accounts)
-  accessKeys: AccessKeys[];
-
   @OneToMany(
     () => AccountHasAddresses,
     (accountHasAddresses) => accountHasAddresses.account
   )
   accountHasAddresses: AccountHasAddresses[];
+
+  @OneToOne(
+    () => AccountHasEmails,
+    (accountHasEmails) => accountHasEmails.accounts
+  )
+  accountHasEmails: AccountHasEmails;
 
   @OneToMany(
     () => AccountHasOwnerZones,
@@ -138,4 +137,10 @@ export class Accounts {
     (accountParameters) => accountParameters.account
   )
   accountParameters: AccountParameters[];
+
+  @OneToMany(
+    () => MonitorNotificationHasAccounts,
+    (monitorNotificationHasAccounts) => monitorNotificationHasAccounts.account
+  )
+  monitorNotificationHasAccounts: MonitorNotificationHasAccounts[];
 }

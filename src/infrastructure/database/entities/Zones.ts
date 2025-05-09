@@ -8,13 +8,14 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { AccessKeys } from "./AccessKeys";
 import { AccountHasOwnerZones } from "./AccountHasOwnerZones";
 import { AccountHasZones } from "./AccountHasZones";
 import { AccountInvites } from "./AccountInvites";
+import { Monitors } from "./Monitors";
 import { Permissions } from "./Permissions";
 import { Roles } from "./Roles";
 import { ZoneHasAddresses } from "./ZoneHasAddresses";
+import { ZoneHasEmails } from "./ZoneHasEmails";
 import { ZoneHasLicenses } from "./ZoneHasLicenses";
 import { ZoneHasPhones } from "./ZoneHasPhones";
 import { ZoneHasTokens } from "./ZoneHasTokens";
@@ -69,9 +70,6 @@ export class Zones {
   @Column("timestamp without time zone", { name: "deleted_at", nullable: true })
   deletedAt: Date | null;
 
-  @OneToMany(() => AccessKeys, (accessKeys) => accessKeys.zones)
-  accessKeys: AccessKeys[];
-
   @OneToMany(
     () => AccountHasOwnerZones,
     (accountHasOwnerZones) => accountHasOwnerZones.zone
@@ -84,6 +82,9 @@ export class Zones {
   @OneToMany(() => AccountInvites, (accountInvites) => accountInvites.zone)
   accountInvites: AccountInvites[];
 
+  @OneToMany(() => Monitors, (monitors) => monitors.zone)
+  monitors: Monitors[];
+
   @OneToMany(() => Permissions, (permissions) => permissions.workspace)
   permissions: Permissions[];
 
@@ -95,6 +96,9 @@ export class Zones {
     (zoneHasAddresses) => zoneHasAddresses.zones
   )
   zoneHasAddresses: ZoneHasAddresses;
+
+  @OneToOne(() => ZoneHasEmails, (zoneHasEmails) => zoneHasEmails.zones)
+  zoneHasEmails: ZoneHasEmails;
 
   @OneToMany(() => ZoneHasLicenses, (zoneHasLicenses) => zoneHasLicenses.zone)
   zoneHasLicenses: ZoneHasLicenses[];

@@ -1,19 +1,20 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import { Accounts } from "./Accounts";
 import { Permissions } from "./Permissions";
-import { Roles } from "./Roles";
 
-@Index("role_has_permissions_pkey", ["permissionId", "roleId"], {
+@Index("account_has_permissions_pkey", ["accountId", "permissionId"], {
   unique: true,
 })
-@Index("index_role_has_permissions_permission_id", ["permissionId"], {})
-@Index("role_has_permissions_role_id_foreign", ["roleId"], {})
-@Entity("role_has_permissions", { schema: "public" })
-export class RoleHasPermissions {
+@Index("index_permission_has_accesses", ["accountId", "permissionId"], {
+  unique: true,
+})
+@Entity("account_has_permissions", { schema: "public" })
+export class AccountHasPermissions {
   @Column("bigint", { primary: true, name: "permission_id" })
   permissionId: string;
 
-  @Column("uuid", { primary: true, name: "role_id" })
-  roleId: string;
+  @Column("uuid", { primary: true, name: "account_id" })
+  accountId: string;
 
   @Column("timestamp without time zone", {
     name: "created_at",
@@ -27,18 +28,18 @@ export class RoleHasPermissions {
   })
   updatedAt: Date;
 
+  @ManyToOne(() => Accounts, (accounts) => accounts.accountHasPermissions, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn([{ name: "account_id", referencedColumnName: "id" }])
+  account: Accounts;
+
   @ManyToOne(
     () => Permissions,
-    (permissions) => permissions.roleHasPermissions,
+    (permissions) => permissions.accountHasPermissions,
     { onDelete: "CASCADE", onUpdate: "CASCADE" }
   )
   @JoinColumn([{ name: "permission_id", referencedColumnName: "id" }])
   permission: Permissions;
-
-  @ManyToOne(() => Roles, (roles) => roles.roleHasPermissions, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  })
-  @JoinColumn([{ name: "role_id", referencedColumnName: "id" }])
-  role: Roles;
 }

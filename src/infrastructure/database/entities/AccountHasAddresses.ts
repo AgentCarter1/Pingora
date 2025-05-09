@@ -2,14 +2,14 @@ import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
 import { Accounts } from "./Accounts";
 import { Addresses } from "./Addresses";
 
-@Index("account_has_addresses_pkey", ["accountId", "addressId"], {
-  unique: true,
-})
 @Index(
   "index_account_has_addresses_account_address",
   ["accountId", "addressId"],
   { unique: true }
 )
+@Index("account_has_addresses_pkey", ["accountId", "addressId"], {
+  unique: true,
+})
 @Entity("account_has_addresses", { schema: "public" })
 export class AccountHasAddresses {
   @Column("uuid", { primary: true, name: "account_id" })

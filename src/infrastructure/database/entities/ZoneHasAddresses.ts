@@ -2,8 +2,8 @@ import { Column, Entity, Index, JoinColumn, OneToOne } from "typeorm";
 import { Addresses } from "./Addresses";
 import { Zones } from "./Zones";
 
-@Index("zone_has_addresses_pkey", ["addressId", "zoneId"], { unique: true })
 @Index("index_address_id_zone_id", ["addressId", "zoneId"], { unique: true })
+@Index("zone_has_addresses_pkey", ["addressId", "zoneId"], { unique: true })
 @Entity("zone_has_addresses", { schema: "public" })
 export class ZoneHasAddresses {
   @Column("uuid", { primary: true, name: "zone_id" })
